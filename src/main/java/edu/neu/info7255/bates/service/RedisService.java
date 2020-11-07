@@ -42,7 +42,7 @@ public class RedisService {
 
             for(String key : keys) {
                 LOG.info("inner delete {}", key);
-                if (!(key.contains("___inv_") || key.contains("___ARRAY_") )) {
+                if (!(key.contains("___inv_") )) {
                     Set<String> jsonKeySet = redisTemplate.opsForSet().members(key);
                     for (String embd_uuid : jsonKeySet) {
                         deleteUtil(embd_uuid);
