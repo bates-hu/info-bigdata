@@ -36,14 +36,14 @@ public class EtagManager {
     }
 
     public String getEtag(String key) {
+        if (!this.etagMap.containsKey(key) && redisService.isKeyExist(key)) {
+            updateEtag(key);
+        }
         return etagMap.getOrDefault(key, null);
     }
 
     public boolean compare(String key, String etag){
-        if (!this.etagMap.containsKey(key)) {
-            return false;
-        }
-        return etagMap.get(key).equals(etag);
+        return this.getEtag(key).equals(etag);
     }
 
     public void updateEtag(String key) {

@@ -55,12 +55,16 @@ public class MainController {
         String etag = requestHeaders.getFirst("If-None-Match");
 
         String key = objectType + Constants.SEP + objectId;
+        if (!redisService.isKeyExist(key)) {
+            return ResponseEntity.noContent().build();
+        }
         if (etag != null && etagManager.compare(key, etag)) {
             LOG.info("NOT MODIFIED");
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-
         JSONObject node = redisService.getUtil(key);
+
+
         if (node == null || node.length() == 0) {
             return ResponseEntity.noContent().build();
         }

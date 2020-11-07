@@ -20,19 +20,6 @@ public class RedisService {
     @Autowired
     protected StringRedisTemplate redisTemplate;
 
-    public boolean set(final String key, String value){
-        boolean result = false;
-        try {
-
-            ValueOperations<String, String> operations = redisTemplate.opsForValue();
-            operations.set(key, value);
-            result = true;
-        } catch (Exception e) {
-            LOG.error("write redis fail" + e.getMessage());
-        }
-        return result;
-    }
-
     public boolean deleteUtil(String uuid) {
         try {
 
