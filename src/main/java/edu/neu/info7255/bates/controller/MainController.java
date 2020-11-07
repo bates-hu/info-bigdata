@@ -101,9 +101,10 @@ public class MainController {
         return ResponseEntity.status(HttpStatus.CREATED).eTag(etagManager.getEtag(key)).build();
     }
 
-    @PatchMapping(value = "/{objectType}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{objectType}/{objectId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> patch(
             @PathVariable(name="objectType", required=true) String objectType,
+            @PathVariable(name="objectId", required=true) String objectId,
             @RequestBody(required=true) String body,
             @RequestHeader HttpHeaders requestHeaders) {
         JSONObject node = null;
@@ -142,9 +143,10 @@ public class MainController {
     }
 
 
-    @PutMapping(value = "/{objectType}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{objectType}/{objectId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> put(
             @PathVariable(name="objectType", required=true) String objectType,
+            @PathVariable(name="objectId", required=true) String objectId,
             @RequestBody(required=true) String body,
             @RequestHeader HttpHeaders requestHeaders) {
         JSONObject node = null;
