@@ -56,12 +56,12 @@ public class MainController {
 
         String key = objectType + Constants.SEP + objectId;
         if (etag != null && etagManager.compare(key, etag)) {
+            LOG.info("NOT MODIFIED");
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
 
-
         JSONObject node = redisService.getUtil(key);
-        if (node == null) {
+        if (node == null || node.length() == 0) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().eTag(etagManager.getEtag(key)).body(node.toString());

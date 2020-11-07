@@ -62,7 +62,12 @@ public class RedisService {
 
     public boolean put(JSONObject jsonObject) {
         String uuid = jsonObject.getString("objectType") + SEP + jsonObject.getString("objectId");
-        return deleteUtil(uuid) && insertUtil(jsonObject);
+        LOG.info("delete {}", uuid);
+        boolean ret = deleteUtil(uuid);
+        LOG.info("keys number after delete{}, ret {}", redisTemplate.keys("*").size(), ret);
+        ret = insertUtil(jsonObject);
+        LOG.info("insert ret {}", ret);
+        return ret;
     }
 
 
@@ -167,10 +172,6 @@ public class RedisService {
             Set<String> keys = redisTemplate.keys(uuid + SEP + "*");
             LOG.info("keys {}", keys);
             keys.removeIf(key -> key.contains("___inv"));
-            if (keys.size() == 0) {
-                return null;
-            }
-
             // object members
             for (String key : keys) {
                 Set<String> jsonKeySet = redisTemplate.opsForSet().members(key);
@@ -190,10 +191,8 @@ public class RedisService {
                     JSONObject embdObject = null;
                     while (jsonKeySetIterator.hasNext()) {
                         String nextKey = jsonKeySetIterator.next();
-
                         embdObject = getUtil(nextKey);
-                        LOG.info("next key {}", newKey);
-                        LOG.info("embdObject {}", embdObject);
+
                     }
                     o.put(newKey, embdObject);
 
@@ -203,6 +202,8 @@ public class RedisService {
 
             // simple members
             Map<String, String> simpleMap = redisTemplate.<String, String>opsForHash().entries(uuid);
+            LOG.info("next key {}", uuid);
+            LOG.info("embdObject {}", simpleMap);
             for (String simpleKey : simpleMap.keySet()) {
                 o.put(simpleKey, simpleMap.get(simpleKey));
             }
