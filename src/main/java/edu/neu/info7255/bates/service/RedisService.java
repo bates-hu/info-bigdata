@@ -88,10 +88,6 @@ public class RedisService {
                     Iterator<Object> jsonIterator = jsonArray.iterator();
                     String setKey = uuid + SEP + edge;
 
-//                    String arraysNameKey = uuid + SEP + "ARRAY_";
-//                    redisTemplate.opsForSet().add(arraysNameKey, setKey);
-//                    LOG.info("save array key {} in {}", edge, arraysNameKey);
-
                     while(jsonIterator.hasNext()) {
                         JSONObject embdObject = (JSONObject) jsonIterator.next();
                         String embd_uuid = embdObject.get("objectType") + SEP + embdObject.getString("objectId");
@@ -138,10 +134,6 @@ public class RedisService {
                     JSONArray jsonArray = (JSONArray) attributeVal;
                     Iterator<Object> jsonIterator = jsonArray.iterator();
                     String setKey = uuid + SEP  + edge;
-//                    String arraysNameKey = uuid + SEP + "ARRAY_";
-//
-//                    redisTemplate.opsForSet().add(arraysNameKey, setKey);
-//                    LOG.info("save array key {} in {}", edge, arraysNameKey);
 
                     while (jsonIterator.hasNext()) {
                         JSONObject embdObject = (JSONObject) jsonIterator.next();
@@ -178,14 +170,6 @@ public class RedisService {
             if (keys.size() == 0) {
                 return null;
             }
-//            keys.removeIf(key -> key.endsWith("ARRAY_"));
-
-//            Set<String> arrayKeys = redisTemplate.opsForSet().members(uuid + SEP + "ARRAY_");
-//            if (arrayKeys == null) {
-//                arrayKeys = Collections.EMPTY_SET;
-//            }
-//            LOG.info("arrayKeys for uuid {} is {}", uuid, arrayKeys);
-
 
             // object members
             for (String key : keys) {
@@ -227,26 +211,6 @@ public class RedisService {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public String get(final String key){
-        String result = null;
-        try {
-            ValueOperations<String, String> operations = redisTemplate.opsForValue();
-            result = operations.get(key);
-        } catch (Exception e) {
-            LOG.error("read redis fail：" + e.getMessage());
-        }
-        return result;
-    }
-
-    public boolean delete(final String key){
-        try {
-            return redisTemplate.delete(key) == Boolean.TRUE;
-        } catch (Exception e) {
-            LOG.error("read redis fail：" + e.getMessage());
-        }
-        return false;
     }
 
     public boolean isKeyExist(final String key) {
